@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carte Hors-Ligne</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jquery-1.8.0.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+    <link rel="stylesheet" href="leaflet-plugins/locate/L.Control.Locate.css" />
+    <link rel="stylesheet" href="leaflet-plugins/search/leaflet-search.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="leaflet-plugins/leaflet.js"></script>
+    <script src="leaflet-plugins/locate/L.Control.locate.js"></script>
+    <script src="leaflet-plugins/search/leaflet-search.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="map.js"></script>
+    <div id="cpanel">
+      <button id="recentrer" style="margin: 5px" onclick="recenter_map();">Recentrer</button>
+    </div>
+  </body>
+</html>
+

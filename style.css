@@ -1,0 +1,21 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+html, body {
+    height: 720px;
+    width: 100%;
+}
+
+#map {
+   height: 100%;
+   width: 1150px;
+   float:left;
+}
+
+#cpanel {
+   height: 100%;
+   width: 100px;
+   float: right;
+   background-color: grey;
+}
