@@ -1,9 +1,9 @@
 var _zoomMin = 1, _zoomMax = 20; 
 getZoomLevels();
-
 // create a map in the "map" div, set the view to a given place and zoom
-var map = L.map('map').setView([45.457, -73.628], _zoomMin);
-var map_center = map.getCenter();
+var map = L.map('map');
+recenter_map();
+
 // add an OpenStreetMap tile layer
 var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -49,6 +49,57 @@ var overlays = {"Arrondissements du Sud-Ouest" : arrondsLayer}
 
 L.control.layers(baseLayers, overlays).addTo(map);
 
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+L.drawLocal.draw.toolbar.buttons.polygon = 'Draw a sexy polygon!';
+
+		var drawControl = new L.Control.Draw({
+			position: 'topright',
+			draw: {
+				circle: false,
+				polyline: false,
+				rectangle: false,
+				polygon: {
+					allowIntersection: false,
+					showArea: true,
+					drawError: {
+						color: '#b00b00',
+						timeout: 1000
+					},
+					shapeOptions: {
+						color: '#CC0099'
+					}
+				},
+				marker: false
+			},
+			edit: {
+				featureGroup: drawnItems,
+				remove: true
+			}
+		});
+		map.addControl(drawControl);
+
+		map.on('draw:created', function (e) {
+			var type = e.layerType,
+				layer = e.layer;
+
+			if (type === 'marker') {
+				layer.bindPopup('A popup!');
+			}
+
+			drawnItems.addLayer(layer);
+		});
+
+		map.on('draw:edited', function (e) {
+			var layers = e.layers;
+			var countOfEditedLayers = 0;
+			layers.eachLayer(function(layer) {
+				countOfEditedLayers++;
+			});
+			console.log("Edited " + countOfEditedLayers + " layers");
+		});
+
 function readJSON(jsonUrl)
 {
 	var json;
@@ -88,5 +139,5 @@ function getZoomLevels()
 
 function recenter_map()
 {
-	map.setView(map_center, _zoomMin);
+	map.setView([45.4564755,-73.663326], _zoomMin);
 }

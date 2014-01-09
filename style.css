@@ -3,13 +3,13 @@ body {
     margin: 0;
 }
 html, body {
-    height: 720px;
+    height: 480px;
     width: 100%;
 }
 
 #map {
    height: 100%;
-   width: 1150px;
+   width: 850px;
    float:left;
 }
 
