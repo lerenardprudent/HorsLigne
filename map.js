@@ -129,7 +129,7 @@ function readJSON(file)
 
 function getZoomLevels()
 {
-	jsonZoomInfo = readJSON('zoomlevels.php');
+	jsonZoomInfo = readJSON('utils/zoomlevels.php');
 	_zoomMin = jsonZoomInfo.minZ;
 	_zoomMax = jsonZoomInfo.maxZ;
 }
