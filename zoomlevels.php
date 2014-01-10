@@ -12,6 +12,6 @@ if ($handle = opendir('./tiles')) {
 		}
     }
     closedir($handle);
-	echo $minZ.",".$maxZ;
+	echo "{\"minZ\": ".$minZ.", \"maxZ\": ".$maxZ."}";
 }
 ?>

@@ -1,3 +1,4 @@
+var http_port = 6767;
 var _zoomMin = 1, _zoomMax = 20; 
 getZoomLevels();
 // create a map in the "map" div, set the view to a given place and zoom
@@ -35,7 +36,7 @@ var arrondsLayer = L.geoJson(
 		}
 	}).addTo(map);
 
-var jsonData = readJSON('http://localhost/hl/sud-ouest.geojson');
+var jsonData = readJSON('sud-ouest.geojson');
 arrondsLayer.addData(jsonData);
 
 // LOCATE CONTROL ----------------------------
@@ -100,9 +101,13 @@ L.drawLocal.draw.toolbar.buttons.polygon = 'Draw a sexy polygon!';
 			console.log("Edited " + countOfEditedLayers + " layers");
 		});
 
-function readJSON(jsonUrl)
+function readJSON(file)
 {
 	var json;
+	if (typeof(http_port) === 'undefined')
+		url = file;
+	else
+		url = "http://localhost:" + http_port + "/" + file;
 	
 	$.ajax({
 		type: 'GET',
@@ -112,7 +117,7 @@ function readJSON(jsonUrl)
 				xhr.overrideMimeType("application/json");
 			}
 		},
-		url: jsonUrl,
+		url: url,
 		dataType: "json",
 		success: function(data) {
 			json = data;
@@ -124,17 +129,9 @@ function readJSON(jsonUrl)
 
 function getZoomLevels()
 {
-	$.ajax({
-		type: 'GET',
-		async: false,
-		url: 'zoomlevels.php',
-		dataType: "text",
-		success: function(data) {
-			var zooms = data.split(',');
-			_zoomMin = parseInt(zooms[0]);
-			_zoomMax = parseInt(zooms[1]);
-		}
-	});
+	jsonZoomInfo = readJSON('zoomlevels.php');
+	_zoomMin = jsonZoomInfo.minZ;
+	_zoomMax = jsonZoomInfo.maxZ;
 }
 
 function recenter_map()
