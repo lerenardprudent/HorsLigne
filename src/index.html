@@ -44,13 +44,22 @@
 	<script src="Leaflet.draw.src/edit/EditToolbar.js"></script>
 	<script src="Leaflet.draw.src/edit/handler/EditToolbar.Edit.js"></script>
 	<script src="Leaflet.draw.src/edit/handler/EditToolbar.Delete.js"></script>
-  </head>
-  <body>
+</head>
+<body>
+	<div id="head">
+	</div>
     <div id="map"></div>
     <script src="map.js"></script>
-    <div id="cpanel">
+    <div id="cpanel" class="hcenter">
+      <p>
       <button id="recentrer" style="margin: 5px" onclick="recenter_map();">Recentrer</button>
+      <p>
+      <label id="nomsess">Nom de séssion:</label>
+      <input id="filename"/>
+      <button id="save" onclick="saveTextAsFile()">Sauvegarder</button>
+      <p>
+      <input type="file" id="fileToLoad">
     </div>
-  </body>
+</body>
 </html>
 
