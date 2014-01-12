@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Carte Hors-Ligne</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="jquery-1.8.0.min.js"></script>
-    <link rel="stylesheet" href="leaflet-plugins/leaflet.css" />
-    <link rel="stylesheet" href="leaflet-plugins/locate/L.Control.Locate.css" />
-    <link rel="stylesheet" href="leaflet-plugins/search/leaflet-search.css" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="leaflet-plugins/leaflet.js"></script>
-    <script src="leaflet-plugins/locate/L.Control.locate.js"></script>
-    <script src="leaflet-plugins/search/leaflet-search.js"></script>
+  <title>Carte Hors-Ligne</title>
+  <meta charset="utf-8" />
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  
+  <link rel="stylesheet" href="leaflet-plugins/leaflet.css" />
+  <link rel="stylesheet" href="leaflet-plugins/locate/L.Control.Locate.css" />
+  <link rel="stylesheet" href="leaflet-plugins/search/leaflet-search.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    
+  <script src="jquery-1.10.2.min.js"></script>  
+  <script src="leaflet-plugins/leaflet.js"></script>
+  <script src="leaflet-plugins/locate/L.Control.locate.js"></script>
+  <script src="leaflet-plugins/search/leaflet-search.js"></script>
 	
 	<link rel="stylesheet" href="Leaflet.draw.dist/leaflet.draw.css" />
 	
@@ -44,6 +47,9 @@
 	<script src="Leaflet.draw.src/edit/EditToolbar.js"></script>
 	<script src="Leaflet.draw.src/edit/handler/EditToolbar.Edit.js"></script>
 	<script src="Leaflet.draw.src/edit/handler/EditToolbar.Delete.js"></script>
+
+  <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="bootstrap/bootstrap-filestyle.min.js"> </script>
 </head>
 <body>
 	<div id="head">
@@ -52,13 +58,19 @@
     <script src="map.js"></script>
     <div id="cpanel" class="hcenter">
       <p>
-      <button id="recentrer" style="margin: 5px" onclick="recenter_map();">Recentrer</button>
       <p>
-      <label id="nomsess">Nom de séssion:</label>
-      <input id="filename"/>
-      <button id="save" onclick="saveTextAsFile()">Sauvegarder</button>
+      <label id="labelnomsess">Nom de séssion:</label>
+      <input id="nomsess"/>
       <p>
-      <input type="file" id="fileToLoad">
+      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm" data-placement="right" data-toggle="tooltip" title="Voir l'étendue de la carte">
+        <i class="glyphicon glyphicon-fullscreen"></i> Recentrer
+      </button>
+      <p>
+      <button id="save" class="btn btn-primary btn-sm" onclick="saveTextAsFile()" data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle">
+        <i class="glyphicon glyphicon-save"></i> Sauvegarder
+      </button>
+      <p>
+      <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle">
     </div>
 </body>
 </html>

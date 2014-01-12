@@ -4,7 +4,7 @@ body {
 }
 html, body {
     height: 480px;
-    width: 1000px;
+    width: 1050px;
 }
 
 #head {
@@ -22,9 +22,9 @@ html, body {
 
 #cpanel {
    height: 100%;
-   width: 147px;
+   width: 200px;
    float: right;
-   background-color: lightgrey;
+   background-color: #00FF99;
    border-top: 1px solid;
    border-bottom: 1px solid;
    border-right: 1px solid;
@@ -36,9 +36,12 @@ html, body {
 }
 
 #filename {
-  width: 135px;
+  width: 175px;
 }
 
 .hcenter {
     text-align:center;
+}
+
+.myClass {
 }

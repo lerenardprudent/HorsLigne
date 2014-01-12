@@ -1,26 +1,21 @@
 var http_port = 6767;
 var _zoomMin = 1, _zoomMax = 20; 
+var polyColor = '#CC0099';
+
 getZoomLevels();
 
 $(document).ready( function() {
   var d = new Date();
   var timestamp = "so_" + d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + "_" + d.getHours() + "h" + d.getMinutes() + "-" + d.getSeconds();
-  document.getElementById("filename").setAttribute("placeholder",timestamp);
+  document.getElementById("nomsess").value = timestamp;
   
   document.getElementById("save").disabled = true;
-  /*
-  $('input[type=file]').each(function(){
-    $(this).addClass('file').addClass('hidden');
-    $(this).parent().append($('<div class="fakefile" />').append($('<input type="text" />').attr('id',$(this).attr('id')+'__fake')).append($('<img src="pix/button_select.gif" alt="" />')));
- 
-    $(this).bind('change', function() {
-      $('#'+$(this).attr('id')+'__fake').val($(this).val());;
-    });
-    $(this).bind('mouseout', function() {
-      $('#'+$(this).attr('id')+'__fake').val($(this).val());;
-    });
-  });
-  */
+  $(":file").filestyle({input: false,
+                        classIcon: "glyphicon glyphicon-file",
+                        classButton: "btn btn-primary btn-sm myClass",
+                        buttonText: "Charger"});
+  $('.myClass').attr('data-toggle', 'tooltip').attr('data-placement', 'right').attr('title', 'Charger une session antérieure');
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
   // create a map in the "map" div, set the view to a given place and zoom
@@ -61,10 +56,6 @@ $(document).ready( function() {
   var jsonData = readJSON('geo/sud-ouest.geojson');
   arrondsLayer.addData(jsonData);
 
-  // LOCATE CONTROL ----------------------------
-
-  L.control.locate().addTo(map);
-
   // LAYERS CONTROL ----------------------------
 
   var baseLayers = {"Carte hors-ligne" : offlineLayer, "Carte OpenStreetMap" : osmLayer}
@@ -91,7 +82,7 @@ $(document).ready( function() {
               timeout: 1000
             },
             shapeOptions: {
-              color: '#CC0099'
+              color: polyColor
             }
           },
           marker: false
@@ -166,9 +157,9 @@ function recenter_map()
 
 function saveTextAsFile()
 {
-  var textToWrite = JSON.stringify(drawnItems.toGeoJSON());
+  var textToWrite = JSON.stringify(drawnItems.getLayers()[0].getLatLngs());
 	var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-  var name = document.getElementById("filename");
+  var name = document.getElementById("nomsess");
   var ext = ".json";
 	var fileNameToSaveAs = ( name.value.length > 0 ? name.value + ext : name.placeholder + ext );
 
@@ -197,4 +188,26 @@ function saveTextAsFile()
 function destroyClickedElement(event)
 {
 	document.body.removeChild(event.target);
+}
+
+function loadSession()
+{
+  var fileToLoad = document.getElementById("fileToLoad").files[0];
+	var fileReader = new FileReader();
+  
+	fileReader.onload = function(fileLoadedEvent) 
+	{
+		var textFromFileLoaded = fileLoadedEvent.target.result;
+    var latlngs = JSON.parse(textFromFileLoaded);
+    drawnItems.clearLayers();
+    var polyLayer = new L.Polygon(latlngs);
+    polyLayer.setStyle({color: polyColor});
+    drawnItems.addLayer(polyLayer);
+	};
+	fileReader.readAsText(fileToLoad, "UTF-8");
+  var nomDeSess = fileToLoad.name;
+  var suffix = ".json";
+  if ( nomDeSess.toLowerCase().endsWith(suffix) )
+    nomDeSess = nomDeSess.substring(0, nomDeSess.length-suffix.length);
+  document.getElementById("nomsess").value = nomDeSess;
 }
