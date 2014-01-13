@@ -52,7 +52,9 @@
   <script type="text/javascript" src="bootstrap/bootstrap-filestyle.min.js"> </script>
 </head>
 <body>
-	<div id="head">
+	<div id="header">
+    <img id="logo" src='logo-douglas.jpg'/>
+    <span id="header-title">Outil de cartographie du quartier perçu - <i>ZEPSOM</i></span>
 	</div>
     <div id="map"></div>
     <script src="map.js"></script>
@@ -60,17 +62,21 @@
       <p>
       <p>
       <label id="labelnomsess">Nom de séssion:</label>
-      <input id="nomsess"/>
+      <input id="nomsess" class="myButtonStyle" />
       <p>
-      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm" data-placement="right" data-toggle="tooltip" title="Voir l'étendue de la carte">
-        <i class="glyphicon glyphicon-fullscreen"></i> Recentrer
-      </button>
-      <p>
-      <button id="save" class="btn btn-primary btn-sm" onclick="saveTextAsFile()" data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle">
-        <i class="glyphicon glyphicon-save"></i> Sauvegarder
+      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="right" data-toggle="tooltip" title="Voir l'étendue de la carte">
+        <i class="glyphicon glyphicon-fullscreen"></i>&nbsp;&nbsp;&nbsp;Recentrer
       </button>
       <p>
       <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle">
+      <p>
+      <button id="save" class="btn btn-primary btn-sm myButtonStyle" onclick="saveTextAsFile()" data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle">
+        <i class="glyphicon glyphicon-save"></i>&nbsp;&nbsp;Sauvegarder
+      </button>
+      <p>
+      <button id="about" class="btn btn-primary myButtonStyle" onclick="showInfo()" data-placement="right" data-toggle="tooltip" title="Afficher un résumé de ce projet">
+        <i class="glyphicon glyphicon-info-sign"></i>&nbsp;&nbsp;À propos
+      </button>
     </div>
 </body>
 </html>

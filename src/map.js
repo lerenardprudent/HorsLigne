@@ -11,10 +11,10 @@ $(document).ready( function() {
   
   document.getElementById("save").disabled = true;
   $(":file").filestyle({input: false,
-                        classIcon: "glyphicon glyphicon-file",
-                        classButton: "btn btn-primary btn-sm myClass",
-                        buttonText: "Charger"});
-  $('.myClass').attr('data-toggle', 'tooltip').attr('data-placement', 'right').attr('title', 'Charger une session antérieure');
+                        classIcon: "glyphicon glyphicon-folder-open",
+                        classButton: "btn btn-primary btn-sm myButtonStyle myFileStyle",
+                        buttonText: "&nbsp;&nbsp;Charger"});
+  $('.myFileStyle').attr('data-toggle', 'tooltip').attr('data-placement', 'right').attr('title', 'Charger une session antérieure');
   $('[data-toggle="tooltip"]').tooltip();
 });
 
@@ -66,7 +66,7 @@ $(document).ready( function() {
   var drawnItems = new L.FeatureGroup();
   map.addLayer(drawnItems);
 
-  L.drawLocal.draw.toolbar.buttons.polygon = 'Sélectionner pour dessiner la zone perçue.';
+  L.drawLocal.draw.toolbar.buttons.polygon = 'Outil de dessin du quartier perçu.';
 
       var drawControl = new L.Control.Draw({
         position: 'topright',
@@ -210,4 +210,10 @@ function loadSession()
   if ( nomDeSess.toLowerCase().endsWith(suffix) )
     nomDeSess = nomDeSess.substring(0, nomDeSess.length-suffix.length);
   document.getElementById("nomsess").value = nomDeSess;
+  document.getElementById("save").disabled = false;
+}
+
+function showInfo()
+{
+  alert("INFO");
 }
