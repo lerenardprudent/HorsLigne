@@ -1,75 +1,125 @@
+//=============================== VARIABLES GLOBALES ==========================
+
 var http_port = 6767;
 var _zoomMin = 1, _zoomMax = 20; 
-var polyColor = '#CC0099';
+var polyStyle = { color: '#FF0000',
+                  fillOpacity: 0.8,
+                  opacity: 0.5
+                };
+var map = L.map('map', {zoomControl: false});
+var tooltipEdit = 'Éditer la zone que vous avez dessinée';
+var tooltipDelete = 'Effacer une zone de la carte';
+var LANGUE = {
+  Français : { ind: 0, val: "fr" },
+	Anglais : { ind: 1, val: "en" }
+};
+var langue = LANGUE.Français;
 
-getZoomLevels();
+//========================= CALQUES DE LA CARTE ===============================
 
-$(document).ready( function() {
-  var d = new Date();
-  var timestamp = "so_" + d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + "_" + d.getHours() + "h" + d.getMinutes() + "-" + d.getSeconds();
-  document.getElementById("nomsess").value = timestamp;
-  
-  document.getElementById("save").disabled = true;
-  $(":file").filestyle({input: false,
-                        classIcon: "glyphicon glyphicon-folder-open",
-                        classButton: "btn btn-primary btn-sm myButtonStyle myFileStyle",
-                        buttonText: "&nbsp;&nbsp;Charger"});
-  $('.myFileStyle').attr('data-toggle', 'tooltip').attr('data-placement', 'right').attr('title', 'Charger une session antérieure');
-  $('[data-toggle="tooltip"]').tooltip();
+var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 });
 
-  // create a map in the "map" div, set the view to a given place and zoom
-  var map = L.map('map');
-  recenter_map();
+defineZoomLevels();
+recenter_map();
+var offlineLayer = L.tileLayer('tiles/{z}/{x}/{y}.png',
+                               {minZoom:_zoomMin, maxZoom:_zoomMax}).addTo(map);
 
-  // add an OpenStreetMap tile layer
-  var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-  });
+var defaultStyle = { "weight": 2,
+                     "opacity": 0.65,
+                     "fillColor" : "blue", 
+                     "fillOpacity": 0.3,
+                     "clickable" : true
+                   };
 
-  var offlineLayer = L.tileLayer('tiles/{z}/{x}/{y}.png', {minZoom:_zoomMin, maxZoom:_zoomMax}).addTo(map);
+var clickedStyle = { "fillColor" : "lightgreen",
+                     "fillOpacity": 0.6
+                   };
 
-  var defaultStyle = {
-      //"color": "#ff7800",
-      "weight": 2,
-      "opacity": 0.65,
-    "fillColor" : "blue", 
-    "fillOpacity":0.3,
-    "clickable" : true
-  };
-
-  var clickedStyle = {
-    "fillColor" : "lightgreen", 
-    "fillOpacity":0.6
-  };
-
-  var arrondsLayer = L.geoJson(
+var arrondsLayer = L.geoJson(
     null,
     { style: defaultStyle,
       onEachFeature: function (feature, layer) {
-              layer.bindPopup("Quartier: <b>" + feature.properties.NOM + '</b>');
+              layer.bindPopup("Arrondissement: <b>" + feature.properties.NOM + '</b>');
         layer.on('click', function () { layer.setStyle(clickedStyle); });
         layer.on('popupclose', function () { layer.setStyle(defaultStyle); });
       }
     }).addTo(map);
 
-  var jsonData = readJSON('geo/sud-ouest.geojson');
-  arrondsLayer.addData(jsonData);
+var jsonData = readJSON('geo/sud-ouest.geojson');
+arrondsLayer.addData(jsonData);
 
-  // LAYERS CONTROL ----------------------------
+//============================= CONTROLS ======================================
 
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+initControls();
+
+map.on('draw:drawstart', function (e) {
+  if ( true /*langue == LANGUE.Anglais*/ ) {
+    $('li a').each(function() {
+      if ( $(this).attr('title').toLowerCase().contains('cancel') ) {
+        $(this).text('Annuler').attr('title', 'Annuler le dessin de la zone');
+      }
+      else if ( $(this).attr('title').toLowerCase().contains('delete') ) {
+        $(this).text('Effacer le dernier point').attr('title', 'Effacer le dernier point de dessiné');
+      }
+    });
+  }
+});
+
+map.on('draw:created', function (e) {
+  var type = e.layerType,
+  layer = e.layer;
+
+  document.getElementById("save").disabled = false;
+  drawnItems.clearLayers();
+  drawnItems.addLayer(layer);
+});
+
+map.on('draw:edited', function (e) {
+  var layers = e.layers;
+  var countOfEditedLayers = 0;
+  layers.eachLayer(function(layer) {
+    countOfEditedLayers++;
+  });
+  console.log("Edited " + countOfEditedLayers + " layers");
+});
+      
+map.on('draw:deleted', function (e) {
+  document.getElementById("save").disabled = true;
+  console.log("Deleted layer");
+  var noZoneYetMsg = ' (aucune zone n\'a encore été dessinée)';
+  $('.leaflet-draw-edit-edit').attr('title', tooltipEdit + noZoneYetMsg );
+  $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
+});
+
+function initControls()
+{
+  // Control calques - en bas à gauche
+  
   var baseLayers = {"Carte hors-ligne" : offlineLayer, "Carte OpenStreetMap" : osmLayer}
   var overlays = {"Arrondissements du Sud-Ouest" : arrondsLayer}
 
-  L.control.layers(baseLayers, overlays).addTo(map);
+  L.control.layers(baseLayers, overlays, {position: 'bottomleft'}).addTo(map);
 
-  var drawnItems = new L.FeatureGroup();
-  map.addLayer(drawnItems);
+  // Controls zoom - en bas à droite
+  L.control.zoom({ position: 'bottomright', 
+                   zoomInTitle: 'Zoomer avant',
+                   zoomOutTitle: 'Zoomer arrière' }).addTo(map);
 
-  L.drawLocal.draw.toolbar.buttons.polygon = 'Outil de dessin du quartier perçu.';
+  // Controls dessin - en haut à droite
+  
+  L.drawLocal.draw.toolbar.buttons.polygon = 'Dessiner une zone qui représente le quartier perçu';
+  L.drawLocal.edit.toolbar.buttons.edit = tooltipEdit;
+  L.drawLocal.edit.toolbar.buttons.remove = tooltipDelete;
+  L.drawLocal.draw.handlers.polygon.tooltip = { start: 'Cliquer pour entamer le dessin.',
+                                                cont: 'Cliquer pour poursuivre le dessin.',
+                                                end: 'Cliquer le point initial pour achever le dessin.' };
 
       var drawControl = new L.Control.Draw({
-        position: 'topright',
+        position: 'topleft',
         draw: {
           circle: false,
           polyline: false,
@@ -81,9 +131,7 @@ $(document).ready( function() {
               color: '#b00b00',
               timeout: 1000
             },
-            shapeOptions: {
-              color: polyColor
-            }
+            shapeOptions: polyStyle
           },
           marker: false
         },
@@ -93,29 +141,7 @@ $(document).ready( function() {
         }
       });
       map.addControl(drawControl);
-
-      map.on('draw:created', function (e) {
-        var type = e.layerType,
-        layer = e.layer;
-
-        document.getElementById("save").disabled = false;
-        drawnItems.clearLayers();
-        drawnItems.addLayer(layer);
-      });
-
-      map.on('draw:edited', function (e) {
-        var layers = e.layers;
-        var countOfEditedLayers = 0;
-        layers.eachLayer(function(layer) {
-          countOfEditedLayers++;
-        });
-        console.log("Edited " + countOfEditedLayers + " layers");
-      });
-      
-      map.on('draw:deleted', function (e) {
-        document.getElementById("save").disabled = true;
-        console.log("Deleted layer");
-      });
+}
 
 function readJSON(file)
 {
@@ -143,7 +169,7 @@ function readJSON(file)
 	return json;
 }
 
-function getZoomLevels()
+function defineZoomLevels()
 {
 	jsonZoomInfo = readJSON('zoomlevels.php');
 	_zoomMin = jsonZoomInfo.minZ;
@@ -201,7 +227,7 @@ function loadSession()
     var latlngs = JSON.parse(textFromFileLoaded);
     drawnItems.clearLayers();
     var polyLayer = new L.Polygon(latlngs);
-    polyLayer.setStyle({color: polyColor});
+    polyLayer.setStyle(polyStyle);
     drawnItems.addLayer(polyLayer);
 	};
 	fileReader.readAsText(fileToLoad, "UTF-8");
@@ -213,7 +239,34 @@ function loadSession()
   document.getElementById("save").disabled = false;
 }
 
-function showInfo()
+function getCurrTimestamp()
 {
-  alert("INFO");
+  var d = new Date();
+  var timestamp = "so_" + leftPad(d.getDate()) + "-" + leftPad(d.getMonth()+1) + "-" + d.getFullYear() + "_" + leftPad(d.getHours()) + "h" + leftPad(d.getMinutes()) + "-" + leftPad(d.getSeconds());
+  return timestamp;
+}
+
+function leftPad(x, padChar)
+{
+  if (typeof(padChar) === 'undefined')
+    padChar = '0';
+  var strX = x.toString();
+  if (x < 10)
+    strX = padChar + strX;
+  return strX;
+}
+
+function parseUrl()
+{
+  var urlParams = {};
+	var query = window.location.search.substring(1).split("&");
+	for (var i = 0, max = query.length; i < max; i++)
+	{
+		if (query[i] === "") // check for trailing & with no param
+			continue;
+
+    var param = query[i].split("=");
+    urlParams[decodeURIComponent(param[0])] = decodeURIComponent(param[1] || "");
+	}
+  return urlParams;
 }

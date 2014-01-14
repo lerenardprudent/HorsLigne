@@ -9,6 +9,8 @@ html, body {
     font-size: 12px;
 }
 
+a { text-decoration: none; }
+
 #header {
 	height: 60px;
 	width: 100%;
@@ -58,6 +60,18 @@ html, body {
   background-color: green;
 }
 
+#langues {
+  float: right;
+  color: green;
+  font-size: 12px;
+  margin: 5px;
+  line-height: 12px;
+}
+
+#langues a {
+  color: green;
+}
+
 .hcenter {
     text-align:center;
 }
@@ -66,6 +80,7 @@ html, body {
   width: 160px;
   height: 30px;
   font-size: 12px;
+  border: 1px solid;
 }
 
 .myFileStyle {
