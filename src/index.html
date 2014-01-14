@@ -54,7 +54,7 @@
 <body>
 	<div id="header">
     <img id="logo" src='logo-douglas.jpg'/>
-    <span id="header-title">Outil de cartographie du quartier perçu - <i>ZEPSOM</i></span>
+    <span id="header-title">VERITAS Hors-Ligne</span>
 	</div>
     <div id="map"></div>
     <script src="map.js"></script>
@@ -74,10 +74,27 @@
         <i class="glyphicon glyphicon-save"></i>&nbsp;&nbsp;Sauvegarder
       </button>
       <p>
-      <button id="about" class="btn btn-primary myButtonStyle" onclick="showInfo()" data-placement="right" data-toggle="tooltip" title="Afficher un résumé de ce projet">
+      <button id="about" class="btn btn-primary myButtonStyle" data-placement="right" data-toggle="modal" data-target="#myModal" title="Afficher un résumé de ce projet">
         <i class="glyphicon glyphicon-info-sign"></i>&nbsp;&nbsp;À propos
       </button>
     </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">VERITAS Hors-Ligne v0,2</h4>
+          </div>
+          <div class="modal-body">
+            <p>Un outil de cartographie du quartier perçu pour les résidents du Sud-Ouest de Montréal.</p>
+            <p>Développé par <a href='http://www.treksoft.com/'>Treksoft</a> 2014 pour l'<a href='http://www.douglas.qc.ca/?locale=fr'>Institut universitaire en santé mentale Douglas</a>.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </body>
 </html>
 
