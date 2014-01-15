@@ -72,6 +72,10 @@ a { text-decoration: none; }
   color: green;
 }
 
+#buttonWrapDiv {
+  display: inline-block;
+}
+
 .hcenter {
     text-align:center;
 }
