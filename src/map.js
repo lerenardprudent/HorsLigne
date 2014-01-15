@@ -13,7 +13,17 @@ var LANGUE = {
   Français : { ind: 0, val: "fr" },
 	Anglais : { ind: 1, val: "en" }
 };
-var langue = LANGUE.Français;
+var engTextTag = 'textang';
+var urlParams = parseUrl();
+var urlBase = window.location.href.split('?')[0];
+var langParamKey = 'lang';
+var langue;
+if ( typeof(urlParams[langParamKey]) !== 'undefined' && urlParams[langParamKey] == LANGUE.Anglais.val ) {
+  langue = LANGUE.Anglais;
+}
+else {
+  langue = LANGUE.Français;
+}
 
 //========================= CALQUES DE LA CARTE ===============================
 
@@ -41,7 +51,7 @@ var arrondsLayer = L.geoJson(
     null,
     { style: defaultStyle,
       onEachFeature: function (feature, layer) {
-              layer.bindPopup("Arrondissement: <b>" + feature.properties.NOM + '</b>');
+              layer.bindPopup(chooseLang("Arrondissement", "Neighborhood") + ": <b>" + feature.properties.NOM + '</b>');
         layer.on('click', function () { layer.setStyle(clickedStyle); });
         layer.on('popupclose', function () { layer.setStyle(defaultStyle); });
       }
@@ -59,11 +69,13 @@ initControls();
 map.on('draw:drawstart', function (e) {
   if ( true /*langue == LANGUE.Anglais*/ ) {
     $('li a').each(function() {
-      if ( $(this).attr('title').toLowerCase().contains('cancel') ) {
-        $(this).text('Annuler').attr('title', 'Annuler le dessin de la zone');
-      }
-      else if ( $(this).attr('title').toLowerCase().contains('delete') ) {
-        $(this).text('Effacer le dernier point').attr('title', 'Effacer le dernier point de dessiné');
+      if ( langue == LANGUE.Français ) {
+        if ( $(this).attr('title').toLowerCase().contains('cancel') ) {
+          $(this).text('Annuler').attr('title', 'Annuler le dessin de la zone');
+        }
+        else if ( $(this).attr('title').toLowerCase().contains('delete') ) {
+          $(this).text('Effacer le dernier point').attr('title', 'Effacer le dernier point de dessiné');
+        }
       }
     });
   }
@@ -90,34 +102,46 @@ map.on('draw:edited', function (e) {
 map.on('draw:deleted', function (e) {
   document.getElementById("save").disabled = true;
   console.log("Deleted layer");
-  var noZoneYetMsg = ' (aucune zone n\'a encore été dessinée)';
-  $('.leaflet-draw-edit-edit').attr('title', tooltipEdit + noZoneYetMsg );
-  $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
+  if ( langue == LANGUE.Français ) {
+    var noZoneYetMsg = ' (aucune zone n\'a encore été dessinée)';
+    $('.leaflet-draw-edit-edit').attr('title', tooltipEdit + noZoneYetMsg );
+    $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
+  }
 });
 
 function initControls()
 {
   // Control calques - en bas à gauche
   
-  var baseLayers = {"Carte hors-ligne" : offlineLayer, "Carte OpenStreetMap" : osmLayer}
-  var overlays = {"Arrondissements du Sud-Ouest" : arrondsLayer}
+  if ( langue == LANGUE.Français ) {
+    var baseLayers = {"Carte hors-ligne" : offlineLayer, "Carte en-ligne" : osmLayer};
+    var overlays = { "Arrondissements du Sud-Ouest" : arrondsLayer};
+  }
+  else {
+    var baseLayers = {"Off-line map" : offlineLayer, "On-line map" : osmLayer};
+    var overlays = { "Sud-Ouest neighborhoods" : arrondsLayer};
+  }
 
   L.control.layers(baseLayers, overlays, {position: 'bottomleft'}).addTo(map);
 
   // Controls zoom - en bas à droite
-  L.control.zoom({ position: 'bottomright', 
-                   zoomInTitle: 'Zoomer avant',
-                   zoomOutTitle: 'Zoomer arrière' }).addTo(map);
+  var zoomControlOptions = { position: 'bottomright' };
+  if ( langue == LANGUE.Français ) {
+    zoomControlOptions.zoomInTitle = 'Zoomer avant';
+    zoomControlOptions.zoomOutTitle = 'Zoomer arrière';
+  }
+  L.control.zoom(zoomControlOptions).addTo(map);
 
   // Controls dessin - en haut à droite
-  
-  L.drawLocal.draw.toolbar.buttons.polygon = 'Dessiner une zone qui représente le quartier perçu';
-  L.drawLocal.edit.toolbar.buttons.edit = tooltipEdit;
-  L.drawLocal.edit.toolbar.buttons.remove = tooltipDelete;
-  L.drawLocal.draw.handlers.polygon.tooltip = { start: 'Cliquer pour entamer le dessin.',
-                                                cont: 'Cliquer pour poursuivre le dessin.',
-                                                end: 'Cliquer le point initial pour achever le dessin.' };
-
+  L.drawLocal.draw.toolbar.buttons.polygon = chooseLang('Mode DESSIN', 'DRAW mode');
+  if ( langue == LANGUE.Français ) {
+    L.drawLocal.edit.toolbar.buttons.edit = tooltipEdit;
+    L.drawLocal.edit.toolbar.buttons.remove = tooltipDelete;
+    L.drawLocal.draw.handlers.polygon.tooltip = { start: 'Cliquer pour entamer le dessin.',
+                                                  cont: 'Cliquer pour poursuivre le dessin.',
+                                                  end: 'Cliquer le point initial pour achever le dessin.' };
+  }
+                                                
       var drawControl = new L.Control.Draw({
         position: 'topleft',
         draw: {
@@ -269,4 +293,26 @@ function parseUrl()
     urlParams[decodeURIComponent(param[0])] = decodeURIComponent(param[1] || "");
 	}
   return urlParams;
+}
+
+function renderSiteInEnglish()
+{
+  $('label[' + engTextTag + ']').each(function() { $(this).text($(this).attr(engTextTag)); });
+  $('button[' + engTextTag + ']').each(function() {
+    var oldHtml = $(this).html();
+    var engTokens = $(this).attr(engTextTag).split(',');
+    $(this).html(oldHtml.substring(0, oldHtml.lastIndexOf(';')) + engTokens[0]);
+    if ( engTokens.length > 1 )
+      $(this).attr('title', engTokens[1]);
+  });
+  $('div[' + engTextTag + ']').each(function() { 
+    $(this).attr('title', $(this).attr(engTextTag)); 
+  });
+  $('button[data-target]').each(function() { $(this).attr('data-target', $(this).attr('data-target') + engTextTag); });
+  $('#douglas-link').attr('href', 'http://www.douglas.qc.ca/?locale=en');
+}
+
+function chooseLang(fr, en)
+{
+  return ( langue == LANGUE.Français ? fr : en );
 }

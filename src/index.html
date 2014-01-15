@@ -52,13 +52,8 @@
   <script type="text/javascript" src="bootstrap/bootstrap-filestyle.min.js"> </script>
   <script type="text/javascript">
     $(document).ready( function() {
-      var urlParams = parseUrl();
-      if ( typeof(urlParams.lang) !== 'undefined' && urlParams.lang == LANGUE.Anglais.val ) {
-        langue = LANGUE.Anglais;
-      }
-      else {
-        langue = LANGUE.Français;
-      }
+      $('#' + LANGUE.Français.val).attr('href', urlBase);
+      $('#' + LANGUE.Anglais.val).attr('href', urlBase + "?" + langParamKey + "=" + LANGUE.Anglais.val);
       $('#' + langue.val).css('color', 'yellow').css('text-decoration', 'underline');
       
       document.getElementById("nomsess").value = getCurrTimestamp();
@@ -67,21 +62,26 @@
       $(":file").filestyle({input: false,
                             classIcon: "glyphicon glyphicon-folder-open",
                             classButton: "btn btn-primary btn-sm myButtonStyle myFileStyle",
-                            buttonText: "&nbsp;&nbsp;Charger"});
-      $('.myFileStyle').attr('data-toggle', 'tooltip').attr('data-placement', 'right').attr('title', 'Charger une session antérieure');
+                            buttonText: "&nbsp;&nbsp; " + chooseLang("Charger", "Load") });
+      $('.myFileStyle').attr('data-toggle', 'tooltip').attr('data-placement', 'right').attr('title', chooseLang('Charger une session antérieure', 'Load a previous session'));
+      if ( langue == LANGUE.Anglais ) {
+        renderSiteInEnglish();
+      }
+      else {
+        var noZoneYetMsg = ' (aucune zone n\'a encore été dessinée)';
+        $('.leaflet-draw-edit-edit').attr('title', tooltipEdit + noZoneYetMsg );
+        $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
+      }
       $('[data-toggle="tooltip"]').tooltip();
-      var noZoneYetMsg = ' (aucune zone n\'a encore été dessinée)';
-      $('.leaflet-draw-edit-edit').attr('title', tooltipEdit + noZoneYetMsg );
-      $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
     });
   </script>
 </head>
 <body>
 	<div id="header">
-    <a href='http://www.douglas.qc.ca/?locale=fr'><img id="logo" src='logo-douglas.jpg' border=0 /></a>
+    <a id="douglas-link" href='http://www.douglas.qc.ca/?locale=fr'><img id="logo" src='logo-douglas.jpg' border=0 /></a>
     <span id="header-title">VERITAS Hors-Ligne</span>
     <span id='langues'>
-      <a id='fr' href='#' title='Version française'>Français</a>&nbsp;/&nbsp;<a id='en' title='English version' href='http://localhost:6767/index.html?lang=en'>English</a>
+      <a id='fr' href='#' title='Version française'>Français</a>&nbsp;/&nbsp;<a id='en' title='English version' href='#'>English</a>
     </span>
 	</div>
     <div id="map"></div>
@@ -89,22 +89,22 @@
     <div id="cpanel" class="hcenter">
       <p>
       <p>
-      <label id="labelnomsess">Nom de séssion:</label>
+      <label id="labelnomsess" textang='Session title:'>Titre de séssion:</label>
       <input id="nomsess" class="myButtonStyle" data-placement="right" data-toggle="tooltip" title="Choisir un nom pour cette session"/>
       <p>
-      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="right" data-toggle="tooltip" title="Voir l'étendue de la carte">
+      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="right" data-toggle="tooltip" title="Voir l'étendue de la carte" textang='Recenter,See the extent of the map'>
         <i class="glyphicon glyphicon-fullscreen"></i>&nbsp;&nbsp;&nbsp;Recentrer
       </button>
       <p>
-      <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle">
+      <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="right" data-toggle="tooltip">
       <p>
-      <div  data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle">
-        <button id="save" class="btn btn-primary btn-sm myButtonStyle" onclick="saveTextAsFile()">
+      <div data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle" textang='Save the current session'>
+        <button id="save" class="btn btn-primary btn-sm myButtonStyle" onclick="saveTextAsFile();" textang="Save">
           <i class="glyphicon glyphicon-save"></i>&nbsp;&nbsp;Sauvegarder
         </button>
       </div>
       <p>
-      <button id="about" class="btn btn-primary myButtonStyle" data-placement="right" data-toggle="modal" data-target="#myModal" title="Afficher un résumé de ce projet">
+      <button id="about" class="btn btn-primary myButtonStyle" data-placement="right" data-toggle="modal" data-target="#myModal" textang='About'>
         <i class="glyphicon glyphicon-info-sign"></i>&nbsp;&nbsp;À propos
       </button>
     </div>
@@ -121,6 +121,23 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="myModaltextang" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">VERITAS Hors-Ligne v0,2</h4>
+          </div>
+          <div class="modal-body">
+            <p>A tool to map the perceived neighborhood for residants of the Sud-Ouest.</p>
+            <p>Developed by <a href='http://www.treksoft.com/'>Treksoft</a> 2014 for the <a href='http://www.douglas.qc.ca/?locale=en'>Douglas Mental Health University Institute</a>.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
