@@ -70,10 +70,10 @@ map.on('draw:drawstart', function (e) {
   if ( true /*langue == LANGUE.Anglais*/ ) {
     $('li a').each(function() {
       if ( langue == LANGUE.Français ) {
-        if ( $(this).attr('title').toLowerCase().contains('cancel') ) {
+        if ( $(this).attr('title').toLowerCase().indexOf('cancel') >= 0 ) {
           $(this).text('Annuler').attr('title', 'Annuler le dessin de la zone');
         }
-        else if ( $(this).attr('title').toLowerCase().contains('delete') ) {
+        else if ( $(this).attr('title').toLowerCase().indexOf('delete') >= 0 ) {
           $(this).text('Effacer le dernier point').attr('title', 'Effacer le dernier point de dessiné');
         }
       }
