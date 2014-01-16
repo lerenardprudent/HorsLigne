@@ -266,7 +266,7 @@ function loadSession()
 function getCurrTimestamp()
 {
   var d = new Date();
-  var timestamp = "so_" + leftPad(d.getDate()) + "-" + leftPad(d.getMonth()+1) + "-" + d.getFullYear() + "_" + leftPad(d.getHours()) + "h" + leftPad(d.getMinutes()) + "-" + leftPad(d.getSeconds());
+  var timestamp = leftPad(d.getDate()) + leftPad(d.getMonth()+1) + (d.getYear()-100) + "-" + leftPad(d.getHours()) + leftPad(d.getMinutes()) + leftPad(d.getSeconds());
   return timestamp;
 }
 
@@ -297,7 +297,7 @@ function parseUrl()
 
 function renderSiteInEnglish()
 {
-  $('label[' + engTextTag + ']').each(function() { $(this).text($(this).attr(engTextTag)); });
+  $('p[' + engTextTag + ']').each(function() { $(this).text($(this).attr(engTextTag)); });
   $('button[' + engTextTag + ']').each(function() {
     var oldHtml = $(this).html();
     var engTokens = $(this).attr(engTextTag).split(',');
@@ -305,6 +305,7 @@ function renderSiteInEnglish()
     if ( engTokens.length > 1 )
       $(this).attr('title', engTokens[1]);
   });
+  $('input[' + engTextTag + ']').each(function() { $(this).attr('title', $(this).attr(engTextTag)); });
   $('div[' + engTextTag + ']').each(function() { 
     $(this).attr('title', $(this).attr(engTextTag)); 
   });

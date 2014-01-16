@@ -4,7 +4,7 @@ body {
 }
 html, body {
     height: 480px;
-    width: 1050px;
+    width: 1000px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 12px;
 }
@@ -32,17 +32,21 @@ a { text-decoration: none; }
 
 #cpanel {
    height: 100%;
-   width: 200px;
+   width: 150px;
    float: right;
    background-color: #D1D1D1;
    border-top: 1px solid;
    border-bottom: 1px solid;
    border-right: 1px solid;
    position: relative;
+   display: block;
 }
 
 #labelnomsess {
-  margin: 0
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: italic;
 }
 
 #logo {
@@ -52,9 +56,9 @@ a { text-decoration: none; }
 }
 
 #about {
-  height: 35px;
+  height: 25px;
   position: absolute;
-  left: 20px;
+  left: 25px;
   bottom: 10px;
   float: margin;
   background-color: green;
@@ -81,7 +85,7 @@ a { text-decoration: none; }
 }
 
 .myButtonStyle {
-  width: 160px;
+  width: 100px;
   height: 30px;
   font-size: 12px;
   border: 1px solid;

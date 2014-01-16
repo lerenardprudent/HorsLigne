@@ -58,7 +58,7 @@
                             classIcon: "glyphicon glyphicon-folder-open",
                             classButton: "btn btn-primary btn-sm myButtonStyle myFileStyle",
                             buttonText: "&nbsp;&nbsp; " + chooseLang("Charger", "Load") });
-      $('.myFileStyle').attr('data-toggle', 'tooltip').attr('data-placement', 'right').attr('title', chooseLang('Charger une session antérieure', 'Load a previous session'));
+      $('.myFileStyle').attr('data-toggle', 'tooltip').attr('data-placement', 'bottom').attr('title', chooseLang('Charger une session antérieure', 'Load a previous session'));
       if ( langue == LANGUE.Anglais ) {
         renderSiteInEnglish();
       }
@@ -68,6 +68,7 @@
         $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
       }
       $('[data-toggle="tooltip"]').tooltip();
+      $('#about').attr('data-placement', 'modal');
     });
   </script>
 </head>
@@ -84,22 +85,23 @@
     <div id="cpanel" class="hcenter">
       <p>
       <p>
-      <label id="labelnomsess" textang='Session name:'>Nom de séssion:</label>
-      <input id="nomsess" class="myButtonStyle" data-placement="right" data-toggle="tooltip" title="Choisir un nom pour cette session"/>
+      <p id="labelnomsess" textang='Session name:'>Nom de séssion:</p>
+      <input id="nomsess" class="myButtonStyle" data-placement="bottom" data-toggle="tooltip" textang="Choose a name for the current session" title="Choisir un nom pour la session actuelle"/>
       <p>
-      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="right" data-toggle="tooltip" title="Voir l'étendue de la carte" textang='Recenter,See the extent of the map'>
+      <p>
+      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="bottom" data-toggle="tooltip" title="Voir l'étendue de la carte" textang='Recenter,See the extent of the map'>
         <i class="glyphicon glyphicon-fullscreen"></i>&nbsp;&nbsp;&nbsp;Recentrer
       </button>
       <p>
-      <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="right" data-toggle="tooltip">
+      <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="bottom" data-toggle="tooltip">
       <p>
-      <div id='buttonWrapDiv' data-placement="right" data-toggle="tooltip" title="Sauvegarder la session actuelle" textang='Save the current session'>
+      <div id='buttonWrapDiv' data-placement="bottom" data-toggle="tooltip" title="Sauvegarder la session actuelle" textang='Save the current session'>
         <button id="save" class="btn btn-primary btn-sm myButtonStyle" onclick="saveTextAsFile();" textang="Save">
           <i class="glyphicon glyphicon-save"></i>&nbsp;&nbsp;Sauvegarder
         </button>
       </div>
       <p>
-      <button id="about" class="btn btn-primary myButtonStyle" data-placement="right" data-toggle="modal" data-target="#myModal" textang='About'>
+      <button id="about" class="btn btn-primary btn-xs myButtonStyle" data-placement="top" data-toggle="tooltip" data-target="#myModal" title='Des renseignements sur ce site' textang='About,About this site'>
         <i class="glyphicon glyphicon-info-sign"></i>&nbsp;&nbsp;À propos
       </button>
     </div>
