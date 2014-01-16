@@ -5,43 +5,43 @@
   <meta charset="utf-8" />
   <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   
-  <link rel="stylesheet" href="leaflet-plugins/leaflet.css" />
+  <link rel="stylesheet" href="leaflet/leaflet.css" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     
   <script src="jquery-1.10.2.min.js"></script>  
-  <script src="leaflet-plugins/leaflet.js"></script>
-	<link rel="stylesheet" href="Leaflet.draw.dist/leaflet.draw.css" />
+  <script src="leaflet/leaflet.js"></script>
+	<link rel="stylesheet" href="leaflet/Leaflet.draw.dist/leaflet.draw.css" />
 	
-	<script src="Leaflet.draw.src/Leaflet.draw.js"></script>
+	<script src="leaflet/Leaflet.draw.src/Leaflet.draw.js"></script>
 
-	<script src="Leaflet.draw.src/edit/handler/Edit.Poly.js"></script>
-	<script src="Leaflet.draw.src/edit/handler/Edit.SimpleShape.js"></script>
-	<script src="Leaflet.draw.src/edit/handler/Edit.Circle.js"></script>
-	<script src="Leaflet.draw.src/edit/handler/Edit.Rectangle.js"></script>
+	<script src="leaflet/Leaflet.draw.src/edit/handler/Edit.Poly.js"></script>
+	<script src="leaflet/Leaflet.draw.src/edit/handler/Edit.SimpleShape.js"></script>
+	<script src="leaflet/Leaflet.draw.src/edit/handler/Edit.Circle.js"></script>
+	<script src="leaflet/Leaflet.draw.src/edit/handler/Edit.Rectangle.js"></script>
 
-	<script src="Leaflet.draw.src/draw/handler/Draw.Feature.js"></script>
-	<script src="Leaflet.draw.src/draw/handler/Draw.Polyline.js"></script>
-	<script src="Leaflet.draw.src/draw/handler/Draw.Polygon.js"></script>
-	<script src="Leaflet.draw.src/draw/handler/Draw.SimpleShape.js"></script>
-	<script src="Leaflet.draw.src/draw/handler/Draw.Rectangle.js"></script>
-	<script src="Leaflet.draw.src/draw/handler/Draw.Circle.js"></script>
-	<script src="Leaflet.draw.src/draw/handler/Draw.Marker.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/handler/Draw.Feature.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/handler/Draw.Polyline.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/handler/Draw.Polygon.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/handler/Draw.SimpleShape.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/handler/Draw.Rectangle.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/handler/Draw.Circle.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/handler/Draw.Marker.js"></script>
 
-	<script src="Leaflet.draw.src/ext/LatLngUtil.js"></script>
-	<script src="Leaflet.draw.src/ext/GeometryUtil.js"></script>
-	<script src="Leaflet.draw.src/ext/LineUtil.Intersect.js"></script>
-	<script src="Leaflet.draw.src/ext/Polyline.Intersect.js"></script>
-	<script src="Leaflet.draw.src/ext/Polygon.Intersect.js"></script>
+	<script src="leaflet/Leaflet.draw.src/ext/LatLngUtil.js"></script>
+	<script src="leaflet/Leaflet.draw.src/ext/GeometryUtil.js"></script>
+	<script src="leaflet/Leaflet.draw.src/ext/LineUtil.Intersect.js"></script>
+	<script src="leaflet/Leaflet.draw.src/ext/Polyline.Intersect.js"></script>
+	<script src="leaflet/Leaflet.draw.src/ext/Polygon.Intersect.js"></script>
 
-	<script src="Leaflet.draw.src/Control.Draw.js"></script>
-	<script src="Leaflet.draw.src/Tooltip.js"></script>
-	<script src="Leaflet.draw.src/Toolbar.js"></script>
+	<script src="leaflet/Leaflet.draw.src/Control.Draw.js"></script>
+	<script src="leaflet/Leaflet.draw.src/Tooltip.js"></script>
+	<script src="leaflet/Leaflet.draw.src/Toolbar.js"></script>
 
-	<script src="Leaflet.draw.src/draw/DrawToolbar.js"></script>
-	<script src="Leaflet.draw.src/edit/EditToolbar.js"></script>
-	<script src="Leaflet.draw.src/edit/handler/EditToolbar.Edit.js"></script>
-	<script src="Leaflet.draw.src/edit/handler/EditToolbar.Delete.js"></script>
+	<script src="leaflet/Leaflet.draw.src/draw/DrawToolbar.js"></script>
+	<script src="leaflet/Leaflet.draw.src/edit/EditToolbar.js"></script>
+	<script src="leaflet/Leaflet.draw.src/edit/handler/EditToolbar.Edit.js"></script>
+	<script src="leaflet/Leaflet.draw.src/edit/handler/EditToolbar.Delete.js"></script>
 
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="bootstrap/bootstrap-filestyle.min.js"> </script>
@@ -73,13 +73,17 @@
   </script>
 </head>
 <body>
+  <!--<div id="background">
+    <img class="stretch" src="ext/logo-douglas.jpg">
+  </div>-->
 	<div id="header">
-    <a id="douglas-link" href='http://www.douglas.qc.ca/?locale=fr'><img id="logo" src='logo-douglas.jpg' border=0 /></a>
+    <!--<a id="douglas-link" href='http://www.douglas.qc.ca/?locale=fr'><img id="logo" src='logo-douglas.jpg' border=0 /></a>-->
     <span id="header-title">VERITAS Hors-Ligne</span>
     <span id='langues'>
       <a id='fr' href='#' title='Version française'>Français</a>&nbsp;/&nbsp;<a id='en' title='English version' href='#'>English</a>
     </span>
 	</div>
+  <div id="subbody">
     <div id="map"></div>
     <script src="map.js"></script>
     <div id="cpanel" class="hcenter">
@@ -139,5 +143,6 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+  </div>
 </body>
 </html>

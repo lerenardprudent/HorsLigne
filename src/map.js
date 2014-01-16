@@ -57,7 +57,7 @@ var arrondsLayer = L.geoJson(
       }
     }).addTo(map);
 
-var jsonData = readJSON('geo/sud-ouest.geojson');
+var jsonData = readJSON('ext/sud-ouest.geojson');
 arrondsLayer.addData(jsonData);
 
 //============================= CONTROLS ======================================
@@ -310,7 +310,7 @@ function renderSiteInEnglish()
     $(this).attr('title', $(this).attr(engTextTag)); 
   });
   $('button[data-target]').each(function() { $(this).attr('data-target', $(this).attr('data-target') + engTextTag); });
-  $('#douglas-link').attr('href', 'http://www.douglas.qc.ca/?locale=en');
+//  $('#douglas-link').attr('href', 'http://www.douglas.qc.ca/?locale=en');
 }
 
 function chooseLang(fr, en)
