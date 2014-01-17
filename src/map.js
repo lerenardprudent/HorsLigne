@@ -34,7 +34,8 @@ var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 defineZoomLevels();
 recenter_map();
 var offlineLayer = L.tileLayer('tiles/{z}/{x}/{y}.png',
-                               {minZoom:_zoomMin, maxZoom:_zoomMax}).addTo(map);
+                               {attribution: '&copy; <a href="http://http://mapnik.org/">Mapnik</a>',
+                               minZoom:_zoomMin, maxZoom:_zoomMax}).addTo(map);
 
 var defaultStyle = { "weight": 2,
                      "opacity": 0.65,
@@ -316,4 +317,132 @@ function renderSiteInEnglish()
 function chooseLang(fr, en)
 {
   return ( langue == LANGUE.Français ? fr : en );
+}
+
+function startTour()
+{
+  var windowWidth = 250;
+  
+  positions = [
+    { container: '#tour', x: -40, y: -180, width: windowWidth, arrow: 'bc' },
+    { container: '.leaflet-control-zoom-in', x: -(windowWidth+12), y: -140, width: windowWidth, arrow: 'rb' },
+    { container: '.leaflet-draw-draw-polygon', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
+    { container: '.leaflet-draw-edit-edit', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
+    { container: '.leaflet-draw-edit-remove', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
+    { container: '.leaflet-draw-draw-polygon', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
+    { container: '#recenter', x: -(windowWidth+12), y:0, width: windowWidth, arrow: 'rt' },
+    { container: '#save', x: -(windowWidth+12), y:0, width: windowWidth, arrow: 'rt' },
+    { container: '.bootstrap-filestyle', x: -(windowWidth+12), y:-5, width: windowWidth, arrow: 'rt' }
+  ];
+      
+  function getStartButtons() {
+    if ( langue == LANGUE.Français ) {
+      return { Commencer: 1, Terminer: 2 };
+    }
+    return { Begin: 1, Exit: 2 };
+  }
+  
+  function getContinueButtons() {
+    if ( langue == LANGUE.Français ) {
+      return { Précédent: -1, Suivant: 1 };
+    }
+    return { Previous: -1, Next: 1 };
+  }
+  
+  function getEndButton() {
+    if ( langue == LANGUE.Français ) {
+      return { Fin: 2 };
+    }
+    return { Done: 2 };
+  }
+  
+var tourSubmitFunc = function(e,v,m,f){
+			if(v === -1){
+				$.prompt.prevState();
+				return false;
+			}
+			else if(v === 1){
+				$.prompt.nextState();
+				return false;
+			}
+},
+tourStates = [
+	{
+		title: chooseLang('Bienvenue', 'Welcome'),
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getStartButtons(),
+		focus: 0,
+		position: positions[0],
+		submit: tourSubmitFunc
+	},
+  {
+		title: chooseLang('Zoomer', 'Zoom'),
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getContinueButtons(),
+		focus: 1,
+		position: positions[1],
+		submit: tourSubmitFunc
+	},
+  {
+		title: 'Draw',
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getContinueButtons(),
+		focus: 1,
+		position: positions[2],
+		submit: tourSubmitFunc
+	},
+  {
+		title: 'Edit',
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getContinueButtons(),
+		focus: 1,
+		position: positions[3],
+		submit: tourSubmitFunc
+	},
+  {
+		title: 'Delete',
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getContinueButtons(),
+		focus: 1,
+		position: positions[4],
+		submit: tourSubmitFunc
+	},
+  {
+		title: 'Start again',
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getContinueButtons(),
+		focus: 1,
+		position: positions[5],
+		submit: tourSubmitFunc
+	},
+  {
+		title: 'Show the map extent',
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getContinueButtons(),
+		focus: 1,
+		position: positions[6],
+		submit: tourSubmitFunc
+	},
+  {
+		title: 'Save your session',
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getContinueButtons(),
+		focus: 1,
+		position: positions[7],
+		submit: tourSubmitFunc
+	},
+    {
+		title: 'Load a previous session',
+		html: 'Ready to take a quick tour of jQuery Impromptu?',
+		buttons: getEndButton(),
+		focus: 0,
+		position: positions[8],
+		submit: tourSubmitFunc
+	},
+];
+  var tour = $.prompt(tourStates);
+  tour.on('impromptu:loaded', function(e){
+				$('button.jqidefaultbutton[id^="jqi_0"]').focus();
+        $('.jqiclose').attr('title', chooseLang('Abandonner ce tour', 'Quit')).css('font-size','20px').css('top','0px').css('right', '5px').css('color', 'grey');
+  });
 }

@@ -70,15 +70,6 @@ a { text-decoration: none; }
   float: left;
 }
 
-#about {
-  height: 25px;
-  position: absolute;
-  left: 25px;
-  bottom: 10px;
-  float: margin;
-  background-color: green;
-}
-
 #langues {
   float: right;
   color: green;
@@ -95,15 +86,31 @@ a { text-decoration: none; }
   display: inline-block;
 }
 
+#about {
+  bottom: 10px;
+    background-color: green;
+}
+
+#tour {
+  bottom: 45px;
+  background-color: grey;
+}
+
 .hcenter {
     text-align:center;
 }
 
 .myButtonStyle {
-  width: 100px;
+  width: 120px;
   height: 30px;
   font-size: 12px;
   border: 1px solid;
+}
+
+.lowerButtonStyle {
+  height: 25px;
+  position: absolute;
+  left: 15px;
 }
 
 .myFileStyle {

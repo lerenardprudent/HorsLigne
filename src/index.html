@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     
-  <script src="jquery-1.10.2.min.js"></script>  
+  <script src="js-plugins/jquery-1.10.2.min.js"></script>  
   <script src="leaflet/leaflet.js"></script>
 	<link rel="stylesheet" href="leaflet/Leaflet.draw.dist/leaflet.draw.css" />
 	
@@ -45,6 +45,10 @@
 
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="bootstrap/bootstrap-filestyle.min.js"> </script>
+  
+  <link rel="stylesheet" href="js-plugins/jquery-impromptu.css" />
+	<script type="text/javascript" src="js-plugins/jquery-impromptu.js"></script>
+  
   <script type="text/javascript">
     $(document).ready( function() {
       $('#' + LANGUE.Français.val).attr('href', urlBase);
@@ -68,7 +72,7 @@
         $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
       }
       $('[data-toggle="tooltip"]').tooltip();
-      $('#about').attr('data-placement', 'modal');
+      $('#about').attr('data-toggle', 'modal');
     });
   </script>
 </head>
@@ -93,7 +97,7 @@
       <input id="nomsess" class="myButtonStyle" data-placement="bottom" data-toggle="tooltip" textang="Choose a name for the current session" title="Choisir un nom pour la session actuelle"/>
       <p>
       <p>
-      <button type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="bottom" data-toggle="tooltip" title="Voir l'étendue de la carte" textang='Recenter,See the extent of the map'>
+      <button id="recenter" type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="bottom" data-toggle="tooltip" title="Voir l'étendue de la carte" textang='Recenter,See the extent of the map'>
         <i class="glyphicon glyphicon-fullscreen"></i>&nbsp;&nbsp;&nbsp;Recentrer
       </button>
       <p>
@@ -105,7 +109,11 @@
         </button>
       </div>
       <p>
-      <button id="about" class="btn btn-primary btn-xs myButtonStyle" data-placement="top" data-toggle="tooltip" data-target="#myModal" title='Des renseignements sur ce site' textang='About,About this site'>
+      <button id="tour" class="btn btn-primary btn-xs myButtonStyle lowerButtonStyle" onclick="startTour();" data-placement="top" data-toggle="tooltip" data-target="tooltip" textang='Instructions,How to use this site' title="Prendre un tour des caractéristiques de ce site">
+        <i class="glyphicon glyphicon-question-sign"></i>&nbsp;&nbsp;Instructions
+      </button>
+      <p>
+      <button id="about" class="btn btn-primary btn-xs myButtonStyle lowerButtonStyle" data-placement="top" data-toggle="tooltip" data-target="#myModal" title='Des renseignements sur ce site' textang='About,About this site'>
         <i class="glyphicon glyphicon-info-sign"></i>&nbsp;&nbsp;À propos
       </button>
     </div>
