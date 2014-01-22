@@ -24,7 +24,8 @@ if ( typeof(urlParams[langParamKey]) !== 'undefined' && urlParams[langParamKey] 
 else {
   langue = LANGUE.Français;
 }
-
+$('#questintro').text(chooseLang("Le quartier de résidence peut avoir une influence sur la santé, et nous aimerions savoir ce que vous considérez être votre quartier.", "Your residential neighbourhood may influence your health, and we would like to know what you consider to be your neighbourhood."));
+$('#quest').text(chooseLang("Pouvez-vous tracer sur la carte les limites de votre quartier telles que vous les percevez?", "Can you draw the boundaries of your neighbourhood as you perceive them to be on the map?"));
 //========================= CALQUES DE LA CARTE ===============================
 
 var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
