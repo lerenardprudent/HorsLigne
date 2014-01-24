@@ -66,11 +66,6 @@
       if ( langue == LANGUE.Anglais ) {
         renderSiteInEnglish();
       }
-      else {
-        var noZoneYetMsg = ' (aucune zone n\'a encore été dessinée)';
-        $('.leaflet-draw-edit-edit').attr('title', tooltipEdit + noZoneYetMsg );
-        $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
-      }
       $('[data-toggle="tooltip"]').tooltip();
       $('#about').attr('data-toggle', 'modal');
     });
@@ -89,6 +84,7 @@
     <br>
     <p id="header-title">
       <span id='questintro'></span>
+      <br>
       <span id='quest'></span>
     </p>
 	</div>
@@ -102,18 +98,14 @@
       <input id="nomsess" class="myButtonStyle" data-placement="bottom" data-toggle="tooltip" textang="Choose a name for the current session" title="Choisir un nom pour la session actuelle"/>
       <p>
       <p>
-      <button id="recenter" type="button" onclick="recenter_map();" class="btn btn-primary btn-sm myButtonStyle" data-placement="bottom" data-toggle="tooltip" title="Voir l'étendue de la carte" textang='Recenter,See the extent of the map'>
-        <i class="glyphicon glyphicon-fullscreen"></i>&nbsp;&nbsp;&nbsp;Recentrer
-      </button>
-      <p>
-      <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="bottom" data-toggle="tooltip">
-      <p>
       <div id='buttonWrapDiv' data-placement="bottom" data-toggle="tooltip" title="Sauvegarder la session actuelle" textang='Save the current session'>
         <button id="save" class="btn btn-primary btn-sm myButtonStyle" onclick="saveTextAsFile();" textang="Save">
           <i class="glyphicon glyphicon-save"></i>&nbsp;&nbsp;Sauvegarder
         </button>
       </div>
       <p>
+      <p>
+      <input id="fileToLoad" type="file" onchange="loadSession();" data-placement="bottom" data-toggle="tooltip">
       <button id="tour" class="btn btn-primary btn-xs myButtonStyle lowerButtonStyle" onclick="startTour();" data-placement="top" data-toggle="tooltip" data-target="tooltip" textang='Instructions,How to use this site' title="Prendre un tour des caractéristiques de ce site">
         <i class="glyphicon glyphicon-question-sign"></i>&nbsp;&nbsp;Instructions
       </button>
@@ -127,11 +119,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">VERITAS Hors-Ligne v0,2</h4>
+            <h4 class="modal-title" id="myModalLabel">VERITAS Hors-Ligne v0,3</h4>
           </div>
           <div class="modal-body">
-            <p>Un outil de cartographie du quartier perçu pour les résidents du Sud-Ouest de Montréal.</p>
-            <p>Développé par <a href='http://www.treksoft.com/'>Treksoft</a> 2014 pour l'<a href='http://www.douglas.qc.ca/?locale=fr'>Institut universitaire en santé mentale Douglas</a>.</p>
+            <p>Un outil de cartographie du « quartier perçu » de résidents du Sud-Ouest de Montréal.</p>
+            <p>Développé par <a href='http://www.treksoft.com/'>Solutions Treksoft Inc.</a> 2014 pour l'<a href='http://www.douglas.qc.ca/?locale=fr'>Institut universitaire en santé mentale Douglas</a>.</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -144,11 +136,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">VERITAS Hors-Ligne v0,2</h4>
+            <h4 class="modal-title" id="myModalLabel">VERITAS Hors-Ligne v0.3</h4>
           </div>
           <div class="modal-body">
-            <p>A tool to map the perceived neighborhood for residants of the Sud-Ouest.</p>
-            <p>Developed by <a href='http://www.treksoft.com/'>Treksoft</a> 2014 for the <a href='http://www.douglas.qc.ca/?locale=en'>Douglas Mental Health University Institute</a>.</p>
+            <p>A tool to map the "perceived neighborhood" of residants of the Sud-Ouest.</p>
+            <p>Developed by <a href='http://www.treksoft.com/'>Solutions Treksoft Inc.</a> 2014 for the <a href='http://www.douglas.qc.ca/?locale=en'>Douglas Mental Health University Institute</a>.</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

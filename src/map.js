@@ -7,8 +7,6 @@ var polyStyle = { color: '#FF0000',
                   opacity: 0.5
                 };
 var map = L.map('map', {zoomControl: false});
-var tooltipEdit = 'Éditer la zone que vous avez dessinée';
-var tooltipDelete = 'Effacer une zone de la carte';
 var LANGUE = {
   Français : { ind: 0, val: "fr" },
 	Anglais : { ind: 1, val: "en" }
@@ -26,6 +24,8 @@ else {
 }
 $('#questintro').text(chooseLang("Le quartier de résidence peut avoir une influence sur la santé, et nous aimerions savoir ce que vous considérez être votre quartier.", "Your residential neighbourhood may influence your health, and we would like to know what you consider to be your neighbourhood."));
 $('#quest').text(chooseLang("Pouvez-vous tracer sur la carte les limites de votre quartier telles que vous les percevez?", "Can you draw the boundaries of your neighbourhood as you perceive them to be on the map?"));
+var tooltipEdit = chooseLang('Mode ÉDITION', 'EDIT mode');
+var tooltipDelete = chooseLang('Mode ÉFFACEMENT', 'DELETE mode');
 //========================= CALQUES DE LA CARTE ===============================
 
 var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -69,15 +69,13 @@ map.addLayer(drawnItems);
 initControls();
 
 map.on('draw:drawstart', function (e) {
-  if ( true /*langue == LANGUE.Anglais*/ ) {
+  if ( langue == LANGUE.Français ) {
     $('li a').each(function() {
-      if ( langue == LANGUE.Français ) {
-        if ( $(this).attr('title').toLowerCase().indexOf('cancel') >= 0 ) {
-          $(this).text('Annuler').attr('title', 'Annuler le dessin de la zone');
-        }
-        else if ( $(this).attr('title').toLowerCase().indexOf('delete') >= 0 ) {
-          $(this).text('Effacer le dernier point').attr('title', 'Effacer le dernier point de dessiné');
-        }
+      if ( $(this).attr('title').toLowerCase().indexOf('cancel') >= 0 ) {
+        $(this).text('Annuler').attr('title', 'Annuler le dessin de la zone');
+      }
+      else if ( $(this).attr('title').toLowerCase().indexOf('delete') >= 0 ) {
+        $(this).text('Effacer le dernier point').attr('title', 'Effacer le dernier point de dessiné');
       }
     });
   }
@@ -104,11 +102,8 @@ map.on('draw:edited', function (e) {
 map.on('draw:deleted', function (e) {
   document.getElementById("save").disabled = true;
   console.log("Deleted layer");
-  if ( langue == LANGUE.Français ) {
-    var noZoneYetMsg = ' (aucune zone n\'a encore été dessinée)';
-    $('.leaflet-draw-edit-edit').attr('title', tooltipEdit + noZoneYetMsg );
-    $('.leaflet-draw-edit-remove').attr('title', tooltipDelete + noZoneYetMsg );
-  }
+  $('.leaflet-draw-edit-edit').attr('title', tooltipEdit );
+  $('.leaflet-draw-edit-remove').attr('title', tooltipDelete );
 });
 
 function initControls()
@@ -136,37 +131,80 @@ function initControls()
 
   // Controls dessin - en haut à droite
   L.drawLocal.draw.toolbar.buttons.polygon = chooseLang('Mode DESSIN', 'DRAW mode');
+  
   if ( langue == LANGUE.Français ) {
-    L.drawLocal.edit.toolbar.buttons.edit = tooltipEdit;
-    L.drawLocal.edit.toolbar.buttons.remove = tooltipDelete;
     L.drawLocal.draw.handlers.polygon.tooltip = { start: 'Cliquer pour entamer le dessin.',
                                                   cont: 'Cliquer pour poursuivre le dessin.',
                                                   end: 'Cliquer le point initial pour achever le dessin.' };
+    L.drawLocal.edit.toolbar.actions.save.text = "Sauvegarder";
+    L.drawLocal.edit.toolbar.actions.save.title = "Sauvegarder toutes modifications";
+    L.drawLocal.edit.toolbar.actions.cancel.text = "Annuler";
+    L.drawLocal.edit.toolbar.actions.cancel.title = "Abandonner l'édition";
+    L.drawLocal.edit.handlers.edit.tooltip.text = "Cliquer sur 'Annuler' pour défaire tous changements.";
+    L.drawLocal.edit.handlers.edit.tooltip.subtext = "Modifier la forme du polygone en déplaçant ses ancranges.";
   }
                                                 
-      var drawControl = new L.Control.Draw({
-        position: 'topleft',
-        draw: {
-          circle: false,
-          polyline: false,
-          rectangle: false,
-          polygon: {
-            allowIntersection: false,
-            showArea: true,
-            drawError: {
-              color: '#b00b00',
-              timeout: 1000
-            },
-            shapeOptions: polyStyle
-          },
-          marker: false
+  var drawControl = new L.Control.Draw({
+    position: 'topleft',
+    draw: {
+      circle: false,
+      polyline: false,
+      rectangle: false,
+      polygon: {
+        allowIntersection: false,
+        showArea: true,
+        drawError: {
+          color: '#b00b00',
+          timeout: 1000
         },
-        edit: {
-          featureGroup: drawnItems,
-          remove: true
-        }
-      });
-      map.addControl(drawControl);
+        shapeOptions: polyStyle
+      },
+      marker: false
+    },
+    edit: {
+      featureGroup: drawnItems,
+      remove: true
+    }
+  });
+  map.addControl(drawControl);
+/*
+  var info = L.control();
+
+  info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+  };
+
+  // method that we will use to update the control based on feature properties passed
+  info.update = function (props) {
+    this._div.innerHTML = "<i class='glyphicon glyphicon-fullscreen myIcon' onclick='recenter_map();'></i>";
+};
+
+info.addTo(map);
+*/
+  var MyControl = L.Control.extend({
+    options: {
+      position: 'topright',
+    },
+    onAdd: function (map) {
+      var controlDiv = L.DomUtil.create('div', 'info');
+      L.DomEvent
+        .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+        .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+        .addListener(controlDiv, 'click', function () { recenter_map(); });
+      controlDiv.id = 'recenter';
+      controlDiv.innerHTML = "<i class='glyphicon glyphicon-fullscreen myIcon' onclick='recenter_map();'></i>";
+      controlDiv.title = chooseLang("Voir l'étendue de la carte", "Show the full map");
+      return controlDiv;
+    }
+  });
+  map.addControl(new MyControl());
+
+  $('.leaflet-draw-edit-edit').attr('title', tooltipEdit );
+  $('.leaflet-draw-edit-remove').attr('title', tooltipDelete );
+  L.drawLocal.edit.toolbar.buttons.edit = tooltipEdit;
+  L.drawLocal.edit.toolbar.buttons.remove = tooltipDelete;
 }
 
 function readJSON(file)
@@ -322,18 +360,20 @@ function chooseLang(fr, en)
 
 function startTour()
 {
-  var windowWidth = 250;
+  var windowWidth = 260;
   
   positions = [
-    { container: '#tour', x: -40, y: -180, width: windowWidth, arrow: 'bc' },
-    { container: '.leaflet-control-zoom-in', x: -(windowWidth+12), y: -140, width: windowWidth, arrow: 'rb' },
+  //  { container: '#tour', x: -40, y: -180, width: windowWidth, arrow: 'bc' },
+    { container: '.leaflet-control-zoom-in', x: -(windowWidth+12), y: -107, width: windowWidth, arrow: 'rb' },
     { container: '.leaflet-draw-draw-polygon', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
+    { container: '#map', x: 300, y: 20, width: windowWidth, arrow: 'bc' },
     { container: '.leaflet-draw-edit-edit', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
     { container: '.leaflet-draw-edit-remove', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
-    { container: '.leaflet-draw-draw-polygon', x: 38, y: -10, width: windowWidth, arrow: 'lt' },
+    { container: '.leaflet-control-layers', x: 47, y: -190, width: windowWidth, arrow: 'lb' },
     { container: '#recenter', x: -(windowWidth+12), y:0, width: windowWidth, arrow: 'rt' },
-    { container: '#save', x: -(windowWidth+12), y:0, width: windowWidth, arrow: 'rt' },
-    { container: '.bootstrap-filestyle', x: -(windowWidth+12), y:-5, width: windowWidth, arrow: 'rt' }
+    { container: '#labelnomsess', x: -(windowWidth-3), y:10, width: windowWidth, arrow: 'rt' },
+    { container: '#save', x: -(windowWidth+12), y:-5, width: windowWidth, arrow: 'rt' },
+    { container: '.bootstrap-filestyle', x: -(windowWidth+12), y:-10, width: windowWidth, arrow: 'rt' }
   ];
       
   function getStartButtons() {
@@ -357,7 +397,8 @@ function startTour()
     return { Done: 2 };
   }
   
-var tourSubmitFunc = function(e,v,m,f){
+  var it = 0;
+  var tourSubmitFunc = function(e,v,m,f){
 			if(v === -1){
 				$.prompt.prevState();
 				return false;
@@ -366,84 +407,93 @@ var tourSubmitFunc = function(e,v,m,f){
 				$.prompt.nextState();
 				return false;
 			}
-},
-tourStates = [
-	{
-		title: chooseLang('Bienvenue', 'Welcome'),
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getStartButtons(),
-		focus: 0,
-		position: positions[0],
-		submit: tourSubmitFunc
-	},
-  {
-		title: chooseLang('Zoomer', 'Zoom'),
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getContinueButtons(),
-		focus: 1,
-		position: positions[1],
-		submit: tourSubmitFunc
-	},
-  {
-		title: 'Draw',
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getContinueButtons(),
-		focus: 1,
-		position: positions[2],
-		submit: tourSubmitFunc
-	},
-  {
-		title: 'Edit',
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getContinueButtons(),
-		focus: 1,
-		position: positions[3],
-		submit: tourSubmitFunc
-	},
-  {
-		title: 'Delete',
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getContinueButtons(),
-		focus: 1,
-		position: positions[4],
-		submit: tourSubmitFunc
-	},
-  {
-		title: 'Start again',
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getContinueButtons(),
-		focus: 1,
-		position: positions[5],
-		submit: tourSubmitFunc
-	},
-  {
-		title: 'Show the map extent',
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getContinueButtons(),
-		focus: 1,
-		position: positions[6],
-		submit: tourSubmitFunc
-	},
-  {
-		title: 'Save your session',
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getContinueButtons(),
-		focus: 1,
-		position: positions[7],
-		submit: tourSubmitFunc
-	},
+  },
+  tourStates = [
     {
-		title: 'Load a previous session',
-		html: 'Ready to take a quick tour of jQuery Impromptu?',
-		buttons: getEndButton(),
-		focus: 0,
-		position: positions[8],
-		submit: tourSubmitFunc
-	},
-];
+      title: chooseLang('Zoomer avant / arrière', 'Zooming in / out'),
+      html: chooseLang('Ajuster votre niveau de zoom via ces boutons-ci.', 'Adjust your zoom level with these buttons.'),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang('Entamer un dessin','Beginning a drawing'),
+      html: chooseLang('Cliquer sur le polygone pour passer en mode Dessin. Vous pourrez dorénavant dessiner une zone sur la carte représentant le quartier perçu.', 'Click on the polygon to enter draw mode. You will then be able to draw a zone on the map representing the perceived neighborhood.'),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang('Dessiner une zone','Drawing a zone'),
+      html: chooseLang('Préciser un sommet de la zone en cliquant sur la carte. Répeter autant de fois que nécessaire, puis cliquer de nouveau sur le premier sommet pour terminer le dessin.', 'Mark a vertex of the zone by clicking on the map. Repeat as many times as is necessary to define the zone, then click on the first vertex to complete the drawing.'),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang('Éditer une zone', 'Editing a zone'),
+      html: chooseLang("Cliquer ici pour passer en mode Édition. Déplacer les ancrages de la zone pour modifier sa forme, et ensuite cliquer sur le bouton gris 'Sauvegarder'.", "Click here to enter edit mode. Move the highlighted points of the zone to modify its shape, then click on the grey 'Save' button."),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang('Effacer une zone', 'Removing a zone'),
+      html: chooseLang("Cliquer sur la poubelle pour passer en mode Éffacement. Ensuite, cliquer directement sur la zone pour l'effacer. Ne pas oublier de cliquer sur le bouton 'Sauvegarder' qui apparaîtra pour confirmer l'effacement.", "Click on this trash can to enter delete mode. Then, click directly on a zone to delete it. Lastly, remember to click on the 'Save' button that appears to confirm the deletion."),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang("Basculer le calque des arrondissements", "Toggling the neighborhoods overlay"),
+      html: chooseLang("Basculer l'affichage du calque des arrondissements du Sud-Ouest à travers le menu qui appararait lorsque le pointeur de souris est positionné au dessus de cette icône.", "Hover the mouse cursor above this icon to bring up a menu in which you can toggle the display of the Sud-Ouest neighborhoods overlay."),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang("Voir l'étendue de la carte", 'Showing the map extent'),
+      html: chooseLang("Cliquer ici pour zoomer arrière et voir tous les arrondissements du Sud-Ouest.", "Click here to zoom out and view the Sud-Ouest in its entirety."),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang('Nommer votre session', 'Naming your session'),
+      html: chooseLang("Attribuer un nom à votre session. Par défaut, le nom de session consiste à la date et l'heure actuelle.",'Choose a name for your session. By default, the session name is the current date and time.'),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+    {
+      title: chooseLang('Sauvegarder votre session', 'Saving your session'),
+      html: chooseLang("Cliquer ici pour sauvegarder votre dessin dans un fichier. Celui-ci portera le même nom que celui de la session et aura un suffix <i>.json</i>. À titre d'exemple, si vous sauvegardez une session nommée <b>abcd</b>, la session sera enregistrée dans le fichier <i>abcd.json</i>.", 'Click here to save your drawing to a file. This file will be given the same name as that of your session, and will have a <i>.json</i> extension. By way of example, if you save a session named <b>abcd</b>, the session will be saved to the file <i>abcd.json</i>.'),
+      buttons: getContinueButtons(),
+      focus: 1,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+      {
+      title: chooseLang('Charger une session antérieure', 'Loading a previous session'),
+      html: chooseLang("Cliquer ici pour faire apparaître une boîte de dialogue de fichiers. Sélectionner un fichier correspondant à une session précédente pour afficher sur la carte le dessin alors créé.", "Click here to bring up a file dialog box. Select the file of a previous session to display the drawing that was created during that session."),
+      buttons: getEndButton(),
+      focus: 0,
+      position: positions[it++],
+      submit: tourSubmitFunc
+    },
+  ];
   var tour = $.prompt(tourStates);
-  tour.on('impromptu:loaded', function(e){
-				$('button.jqidefaultbutton[id^="jqi_0"]').focus();
-        $('.jqiclose').attr('title', chooseLang('Abandonner ce tour', 'Quit')).css('font-size','20px').css('top','0px').css('right', '5px').css('color', 'grey');
+    tour.on('impromptu:loaded', function(e){
+          $('button.jqidefaultbutton[id^="jqi_0"]').focus();
+          $('.jqiclose').attr('title', chooseLang('Abandonner ce tour', 'Quit')).css('font-size','20px').css('top','0px').css('right', '5px').css('color', 'grey');
+          $('.jqititle').css('margin', '2px');
   });
 }

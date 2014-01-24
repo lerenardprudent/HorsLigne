@@ -7,7 +7,7 @@ body {
 }
 html, body {
     height: 576px;
-    width: 1006px;
+    width: 1024px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 12px;
     background-image: url('ext/logo-douglas-bw.jpg')
@@ -59,7 +59,7 @@ a { text-decoration: none; }
 
 #cpanel {
    height: 100%;
-   width: 150px;
+   width: 168px;
    float: right;
    background: linear-gradient(lightyellow,orange);
    border-top: 1px solid;
@@ -71,9 +71,13 @@ a { text-decoration: none; }
 
 #labelnomsess {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   font-style: italic;
+}
+
+#nomsess {
+  font-size: 15px;
 }
 
 #logo {
@@ -124,8 +128,8 @@ a { text-decoration: none; }
 }
 
 .myButtonStyle {
-  width: 120px;
-  height: 30px;
+  width: 140px;
+  height: 27px;
   font-size: 12px;
   border: 1px solid;
 }
@@ -133,7 +137,7 @@ a { text-decoration: none; }
 .lowerButtonStyle {
   height: 25px;
   position: absolute;
-  left: 15px;
+  left: 10px;
 }
 
 .myFileStyle {
@@ -142,4 +146,21 @@ a { text-decoration: none; }
 .stretch {
   height: 100%;
   width: 100%;
+}
+
+.info {
+    padding: 6px 6px 3px 6px;
+    background: white;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
+}
+
+.info:hover
+{
+    background-color: #F4F4F4;
+    cursor: pointer;
+}
+
+.myIcon {
+  font-size: 14px;
 }
